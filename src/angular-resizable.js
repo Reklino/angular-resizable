@@ -60,7 +60,7 @@
                         document.addEventListener('mousemove', drag, false);
                     };
                                                     
-                    for(i=0;i<dir.length;i++) {
+                    for(var i=0;i<dir.length;i++) {
                         (function () {
                             var grabber = document.createElement('div'),
                                 direction = dir[i];
