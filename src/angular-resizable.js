@@ -19,7 +19,7 @@
                     var style = window.getComputedStyle(element[0], null),
                         w = parseInt(style.getPropertyValue("width")),
                         h = parseInt(style.getPropertyValue("height")),
-                        dir = scope.rDirections,
+                        dir = scope.rDirections.length > 0 ? scope.rDirections : ['right'],
                         vx = scope.rCenteredX ? 2 : 1, // if centered double velocity
                         vy = scope.rCenteredY ? 2 : 1, // if centered double velocity
                         start,
