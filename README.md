@@ -9,7 +9,7 @@ All other resizable directive concepts I came across include layout logic in the
 1. `bower install angular-resizable`
 2. Include `angluar-resizable.js` in your project.
 3. Include `angluar-resizable.css` in your project as well (this provides default styling for the resize handles).
-4. Then include the module in your app: `angular.module('app', ['resizable'])`
+4. Then include the module in your app: `angular.module('app', ['angularResizable'])`
 5. Use it: `<section resizable r-directions="['bottom', 'right']" r-flex="true">`
 
 Include any sides you want to be resizable in an array inside `r-directions`. Accepts 'top','right','bottom', and 'left'

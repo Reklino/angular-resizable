@@ -1,8 +1,9 @@
 {
   "name": "angular-resizable",
-  "version": "1.0.0",
-  "description": "A directive for creating resizable containers.",
-  "main": "index.js",
+  "version": "1.0.1",
+  "description": "A directive for creating resizable containers in angular.",
+  "keywords": ["angular", "angular-js", "angularjs", "resize", "resizable", "directive", "container", "lightweight"],
+  "main": "src/angular-resizable.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

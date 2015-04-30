@@ -1,4 +1,4 @@
-angular.module('app', [])
+angular.module('angularResizable', [])
     .directive('resizable', function() {
         return {
             restrict: 'AE',
