@@ -6,9 +6,19 @@ angular.module('angularResizable', [])
                 rDirections: "=",
                 rCenteredX: "=",
                 rCenteredY: "=",
+                rWidth: "=",
+                rHeight: "=",
                 rFlex: "="
             },
             link: function(scope, element, attr) {
+                
+                // register watchers on width and height attributes if they are set
+                scope.$watch('rWidth', function(value){
+                    element[0].style.width = scope.rWidth + 'px';
+                });
+                scope.$watch('rHeight', function(value){
+                    element[0].style.height = scope.rHeight + 'px';
+                });
 
                 element.addClass('resizable');
 
@@ -20,9 +30,19 @@ angular.module('angularResizable', [])
                     vy = scope.rCenteredY ? 2 : 1, // if centered double velocity
                     start,
                     dragDir,
-                    axis;
+                    axis,
+                    info = {};
+                
+                var updateInfo = function() {
+                    info.width = false; info.height = false;
+                    if(axis == 'x')
+                        info.width = scope.rFlex ? parseInt(element[0].style.flexBasis) : parseInt(element[0].style.width);
+                    else
+                        info.height = scope.rFlex ? parseInt(element[0].style.flexBasis) : parseInt(element[0].style.height);
+                    info.id = element[0].id;
+                }
 
-                var drag = function(e) {
+                var dragging = function(e) {
                     var offset = axis == 'x' ? start - e.clientX : start - e.clientY;
                     switch(dragDir) {
                         case 'top':
@@ -43,6 +63,13 @@ angular.module('angularResizable', [])
                             break;
                     }
                 };
+                var dragEnd = function(e) {
+                    updateInfo();
+                    scope.$emit("angular-resizable.resizeEnd", info);
+                    document.removeEventListener('mouseup', dragEnd, false);
+                    document.removeEventListener('mousemove', dragging, false);
+                    element.removeClass('no-transition');
+                }
                 var dragStart = function(e, direction) {
                     dragDir = direction;
                     axis = dragDir == 'left' || dragDir == 'right' ? 'x' : 'y';
@@ -53,17 +80,17 @@ angular.module('angularResizable', [])
                     //prevent transition while dragging
                     element.addClass('no-transition');
 
-                    document.addEventListener('mouseup', function() {
-                        document.removeEventListener('mousemove', drag, false);
-                        element.removeClass('no-transition');
-                    });
-                    document.addEventListener('mousemove', drag, false);
+                    document.addEventListener('mouseup', dragEnd, false);
+                    document.addEventListener('mousemove', dragging, false);
                     
                     // Disable highlighting while dragging
                     if(e.stopPropagation) e.stopPropagation();
                     if(e.preventDefault) e.preventDefault();
                     e.cancelBubble = true;
                     e.returnValue = false;
+                    
+                    updateInfo();
+                    scope.$emit("angular-resizable.resizeStart", info);
                 };
 
                 for(var i=0;i<dir.length;i++) {
