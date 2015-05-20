@@ -1,5 +1,5 @@
 # angular-resizable
-A   directive for creating resizable containers.
+A directive for creating resizable containers.
 
 ## Why?
 All other resizable directive concepts I came across include layout logic in the directive. I wanted a directive that only handled the resize logic. This way, the layout logic is quarantined to the CSS.
@@ -7,8 +7,8 @@ All other resizable directive concepts I came across include layout logic in the
 ## Usage
 
 1. `npm install angular-resizable` or `bower install angular-resizable` or clone/download this repo
-2. Include `angluar-resizable.min.js` in your project.
-3. Include `angluar-resizable.min.css` in your project as well (this provides default styling for the resize handles).
+2. Include `angular-resizable.min.js` in your project.
+3. Include `angular-resizable.min.css` in your project as well (this provides default styling for the resize handles).
 4. Then include the module in your app: `angular.module('app', ['angularResizable'])`
 5. Use it: `<section resizable r-directions="['bottom', 'right']" r-flex="true">`
 
@@ -43,6 +43,6 @@ This event is emitted at the end of a resize with the following object as an arg
 - `info.height` : The height of the directive at time of resize end. **Will be false if resizing vertically
 - `info.id` : The id of the directive. **Will be false if there is no id set.
 
-## Liscense
+## License
 
 MIT
