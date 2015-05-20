@@ -1,5 +1,3 @@
-![example image](https://raw.github.com/Reklino/angular-resizable/master/demo.gif)
-
 # angular-resizable
 A   directive for creating resizable containers.
 
