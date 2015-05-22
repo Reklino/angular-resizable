@@ -66,6 +66,7 @@ angular.module('angularResizable', [])
                 var dragEnd = function(e) {
                     updateInfo();
                     scope.$emit("angular-resizable.resizeEnd", info);
+                    scope.$apply();
                     document.removeEventListener('mouseup', dragEnd, false);
                     document.removeEventListener('mousemove', dragging, false);
                     element.removeClass('no-transition');
@@ -91,6 +92,7 @@ angular.module('angularResizable', [])
                     
                     updateInfo();
                     scope.$emit("angular-resizable.resizeStart", info);
+                    scope.$apply();
                 };
 
                 for(var i=0;i<dir.length;i++) {
