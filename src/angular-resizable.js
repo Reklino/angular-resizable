@@ -102,7 +102,7 @@ angular.module('angularResizable', [])
 
                         // add class for styling purposes
                         grabber.setAttribute('class', 'rg-' + dir[i]);
-                        grabber.innerHTML = '<span></span>';
+                        grabber.innerHTML = '<div><span></span></div>';
                         element[0].appendChild(grabber);
                         grabber.ondragstart = function() { return false }
                         grabber.addEventListener('mousedown', function(e) {
