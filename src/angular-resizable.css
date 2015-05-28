@@ -19,7 +19,6 @@
   background: transparent;
 }
 .rg-right span, .rg-left span, .rg-top span, .rg-bottom span {
-  position: absolute;
   box-sizing: border-box;
   display: block;
   border: 1px solid #ccc;
@@ -27,19 +26,14 @@
 
 .rg-right span, .rg-left span {
   border-width: 0 1px;
-  top: 50%;
-  margin-top: -10px;
-  margin: -10px 0 0 3.5px;
-  height: 20px;
-  width: 7px;
+  height: 100%;
+  width: 100%;
 }
 
 .rg-top span, .rg-bottom span {
   border-width: 1px 0;
-  left: 50%;
-  margin: 3.5px 0 0 -10px;
-  width: 20px;
-  height: 7px;
+  height: 100%;
+  width: 100%;
 }
 
 .rg-top {
@@ -72,4 +66,35 @@
   left: 0;
   top: 0;
   margin-left: -14px;
+}
+
+.rg-left div, .rg-right div {
+  position: absolute;
+  top: 50%;
+  margin: -14px 0 0 0;
+  height: 28px;
+  width: 12px;
+  padding: 3px;
+}
+
+.rg-top div, .rg-bottom div {
+  position: absolute;
+  right: 50%;
+  margin: 0 -14px 0 0;
+  height: 12px;
+  width: 28px;
+  padding: 3px;
+}
+
+.rg-left div {
+  right: 0;
+}
+.rg-right div {
+  left: 0;
+}
+.rg-top div {
+  bottom: 0;
+}
+.rg-bottom div {
+  top: 0;
 }
