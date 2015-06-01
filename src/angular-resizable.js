@@ -1,5 +1,17 @@
 angular.module('angularResizable', [])
     .directive('resizable', function() {
+        var toCall;
+        function throttle(fun) {
+            if (toCall === undefined) {
+                toCall = fun;
+                setTimeout(function() {
+                    toCall();
+                    toCall = undefined;
+                }, 100);
+            } else {
+                toCall = fun;
+            }
+        }
         return {
             restrict: 'AE',
             scope: {
@@ -8,7 +20,8 @@ angular.module('angularResizable', [])
                 rCenteredY: "=",
                 rWidth: "=",
                 rHeight: "=",
-                rFlex: "="
+                rFlex: "=",
+                rGrabber: "@"
             },
             link: function(scope, element, attr) {
                 
@@ -28,6 +41,7 @@ angular.module('angularResizable', [])
                     dir = scope.rDirections,
                     vx = scope.rCenteredX ? 2 : 1, // if centered double velocity
                     vy = scope.rCenteredY ? 2 : 1, // if centered double velocity
+                    inner = scope.rGrabber ? scope.rGrabber : '<span></span>',
                     start,
                     dragDir,
                     axis,
@@ -62,6 +76,8 @@ angular.module('angularResizable', [])
                             else {            element[0].style.width = w + (offset * vx) + 'px'; }
                             break;
                     }
+                    updateInfo();
+                    throttle(function() { scope.$emit("angular-resizable.resizing", info);});
                 };
                 var dragEnd = function(e) {
                     updateInfo();
@@ -70,7 +86,7 @@ angular.module('angularResizable', [])
                     document.removeEventListener('mouseup', dragEnd, false);
                     document.removeEventListener('mousemove', dragging, false);
                     element.removeClass('no-transition');
-                }
+                };
                 var dragStart = function(e, direction) {
                     dragDir = direction;
                     axis = dragDir == 'left' || dragDir == 'right' ? 'x' : 'y';
@@ -102,7 +118,7 @@ angular.module('angularResizable', [])
 
                         // add class for styling purposes
                         grabber.setAttribute('class', 'rg-' + dir[i]);
-                        grabber.innerHTML = '<span></span>';
+                        grabber.innerHTML = inner;
                         element[0].appendChild(grabber);
                         grabber.ondragstart = function() { return false }
                         grabber.addEventListener('mousedown', function(e) {
