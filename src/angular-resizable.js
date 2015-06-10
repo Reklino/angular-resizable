@@ -45,22 +45,14 @@ angular.module('angularResizable', [])
                     start,
                     dragDir,
                     axis,
-                    info = {},
-                    relativeWidthRegexp = /^\d+\%$/;
-                var parseIntWrapper = function(integer, axis) {
-                  if (integer.search(relativeWidthRegexp) > -1) {
-                      var axisSize = axis === 'x'? $($window).width() : $($window).height();
-                      return axisSize * parseInt(integer) / 100;
-                  } else {
-                      return parseInt(integer);
-                  }
-                };
+                    info = {};
+
                 var updateInfo = function() {
                     info.width = false; info.height = false;
                     if(axis == 'x')
-                        info.width = scope.rFlex ? parseIntWrapper(element[0].style.flexBasis, axis) : parseIntWrapper(element[0].style.width, axis);
+                        info.width = scope.rFlex ? parseInt(element[0].style.flexBasis, axis) : parseInt($(element[0]).width(), axis);
                     else
-                        info.height = scope.rFlex ? parseIntWrapper(element[0].style.flexBasis, axis) : parseIntWrapper(element[0].style.height, axis);
+                        info.height = scope.rFlex ? parseInt(element[0].style.flexBasis, axis) : parseInt($(element[0]).height(), axis);
                     info.id = element[0].id;
                 };
 
