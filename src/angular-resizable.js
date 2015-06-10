@@ -1,5 +1,5 @@
 angular.module('angularResizable', [])
-    .directive('resizable', function() {
+    .directive('resizable', ['$window', function($window) {
         var toCall;
         function throttle(fun) {
             if (toCall === undefined) {
@@ -45,16 +45,24 @@ angular.module('angularResizable', [])
                     start,
                     dragDir,
                     axis,
-                    info = {};
-                
+                    info = {},
+                    relativeWidthRegexp = /^\d+\%$/;
+                var parseIntWrapper = function(integer, axis) {
+                  if (integer.search(relativeWidthRegexp) > -1) {
+                      var axisSize = axis === 'x'? $($window).width() : $($window).height();
+                      return axisSize * parseInt(integer) / 100;
+                  } else {
+                      return parseInt(integer);
+                  }
+                };
                 var updateInfo = function() {
                     info.width = false; info.height = false;
                     if(axis == 'x')
-                        info.width = scope.rFlex ? parseInt(element[0].style.flexBasis) : parseInt(element[0].style.width);
+                        info.width = scope.rFlex ? parseIntWrapper(element[0].style.flexBasis, axis) : parseIntWrapper(element[0].style.width, axis);
                     else
-                        info.height = scope.rFlex ? parseInt(element[0].style.flexBasis) : parseInt(element[0].style.height);
+                        info.height = scope.rFlex ? parseIntWrapper(element[0].style.flexBasis, axis) : parseIntWrapper(element[0].style.height, axis);
                     info.id = element[0].id;
-                }
+                };
 
                 var dragging = function(e) {
                     var offset = axis == 'x' ? start - e.clientX : start - e.clientY;
@@ -129,4 +137,4 @@ angular.module('angularResizable', [])
 
             }
         }
-    });
+    }]);
