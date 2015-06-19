@@ -24,7 +24,7 @@ angular.module('angularResizable', [])
                 rGrabber: "@"
             },
             link: function(scope, element, attr) {
-                
+
                 // register watchers on width and height attributes if they are set
                 scope.$watch('rWidth', function(value){
                     element[0].style.width = scope.rWidth + 'px';
@@ -46,7 +46,7 @@ angular.module('angularResizable', [])
                     dragDir,
                     axis,
                     info = {};
-                
+
                 var updateInfo = function() {
                     info.width = false; info.height = false;
                     if(axis == 'x')
@@ -61,7 +61,7 @@ angular.module('angularResizable', [])
                     switch(dragDir) {
                         case 'top':
                             if(scope.rFlex) { element[0].style.flexBasis = h + (offset * vy) + 'px'; }
-                            else {            element[0].style.height = h + (offset * vy) + 'px'; }          
+                            else {            element[0].style.height = h + (offset * vy) + 'px'; }
                             break;
                         case 'right':
                             if(scope.rFlex) { element[0].style.flexBasis = w - (offset * vx) + 'px'; }
@@ -93,19 +93,19 @@ angular.module('angularResizable', [])
                     start = axis == 'x' ? e.clientX : e.clientY;
                     w = parseInt(style.getPropertyValue("width"));
                     h = parseInt(style.getPropertyValue("height"));
-                    
+
                     //prevent transition while dragging
                     element.addClass('no-transition');
 
                     document.addEventListener('mouseup', dragEnd, false);
                     document.addEventListener('mousemove', dragging, false);
-                    
+
                     // Disable highlighting while dragging
                     if(e.stopPropagation) e.stopPropagation();
                     if(e.preventDefault) e.preventDefault();
                     e.cancelBubble = true;
                     e.returnValue = false;
-                    
+
                     updateInfo();
                     scope.$emit("angular-resizable.resizeStart", info);
                     scope.$apply();
@@ -122,7 +122,10 @@ angular.module('angularResizable', [])
                         element[0].appendChild(grabber);
                         grabber.ondragstart = function() { return false }
                         grabber.addEventListener('mousedown', function(e) {
+                          if (e.which == 1) {
+                            // left mouse click
                             dragStart(e, direction);
+                          }
                         }, false);
                     }())
                 }
