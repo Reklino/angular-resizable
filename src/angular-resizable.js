@@ -55,7 +55,7 @@ angular.module('angularResizable', [])
                     else
                         info.height = scope.rFlex ? parseInt(element[0].style.flexBasis) : parseInt(element[0].style.height);
                     info.id = element[0].id;
-                }
+                };
 
                 var dragging = function(e) {
                     var prop, offset = axis === 'x' ? start - e.clientX : start - e.clientY;
@@ -115,7 +115,7 @@ angular.module('angularResizable', [])
                         grabber.setAttribute('class', 'rg-' + dir[i]);
                         grabber.innerHTML = inner;
                         element[0].appendChild(grabber);
-                        grabber.ondragstart = function() { return false }
+                        grabber.ondragstart = function() { return false; };
                         grabber.addEventListener('mousedown', function(e) {
                           disabled = (scope.rDisabled === 'true');
                           if (!disabled && e.which === 1) {
@@ -123,9 +123,9 @@ angular.module('angularResizable', [])
                             dragStart(e, direction);
                           }
                         }, false);
-                    }())
+                    }());
                 }
 
             }
-        }
+        };
     });
