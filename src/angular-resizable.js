@@ -51,9 +51,9 @@ angular.module('angularResizable', [])
                 var updateInfo = function() {
                     info.width = false; info.height = false;
                     if(axis === 'x')
-                        info.width = scope.rFlex ? parseInt(element[0].style.flexBasis) : parseInt(element[0].style.width);
+                        info.width = parseInt(element[0].style[scope.rFlex ? 'flexBasis' : 'width']);
                     else
-                        info.height = scope.rFlex ? parseInt(element[0].style.flexBasis) : parseInt(element[0].style.height);
+                        info.height = parseInt(element[0].style[scope.rFlex ? 'flexBasis' : 'height']);
                     info.id = element[0].id;
                 };
 
