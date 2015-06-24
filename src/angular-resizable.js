@@ -106,26 +106,22 @@ angular.module('angularResizable', [])
                     scope.$apply();
                 };
 
-                for(var i=0;i<dir.length;i++) {
-                    (function () {
-                        var grabber = document.createElement('div'),
-                            direction = dir[i];
+                dir.forEach(function (direction) {
+                    var grabber = document.createElement('div');
 
                         // add class for styling purposes
-                        grabber.setAttribute('class', 'rg-' + dir[i]);
+                    grabber.setAttribute('class', 'rg-' + direction);
                         grabber.innerHTML = inner;
                         element[0].appendChild(grabber);
                         grabber.ondragstart = function() { return false; };
                         grabber.addEventListener('mousedown', function(e) {
-                          disabled = (scope.rDisabled === 'true');
+                        var disabled = (scope.rDisabled === 'true');
                           if (!disabled && e.which === 1) {
                             // left mouse click
                             dragStart(e, direction);
                           }
                         }, false);
-                    }());
-                }
-
+                });
             }
         };
     });
