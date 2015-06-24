@@ -50,7 +50,7 @@ angular.module('angularResizable', [])
 
                 var updateInfo = function() {
                     info.width = false; info.height = false;
-                    if(axis == 'x')
+                    if(axis === 'x')
                         info.width = scope.rFlex ? parseInt(element[0].style.flexBasis) : parseInt(element[0].style.width);
                     else
                         info.height = scope.rFlex ? parseInt(element[0].style.flexBasis) : parseInt(element[0].style.height);
@@ -58,16 +58,16 @@ angular.module('angularResizable', [])
                 }
 
                 var dragging = function(e) {
-                    var offset = axis == 'x' ? start - e.clientX : start - e.clientY;
+                    var prop, offset = axis === 'x' ? start - e.clientX : start - e.clientY;
                     switch(dragDir) {
                         case 'top':
                         case 'bottom':
-                            var prop = scope.rFlex ? 'flexBasis' : 'height';
+                            prop = scope.rFlex ? 'flexBasis' : 'height';
                             element[0].style[prop] = h + (offset * vy) + 'px';
                             break;
                         case 'right':
                         case 'left':
-                            var prop = scope.rFlex ? 'flexBasis' : 'width';
+                            prop = scope.rFlex ? 'flexBasis' : 'width';
                             element[0].style[prop] = w - (offset * vx) + 'px';
                             break;
                     }
@@ -84,8 +84,8 @@ angular.module('angularResizable', [])
                 };
                 var dragStart = function(e, direction) {
                     dragDir = direction;
-                    axis = dragDir == 'left' || dragDir == 'right' ? 'x' : 'y';
-                    start = axis == 'x' ? e.clientX : e.clientY;
+                    axis = dragDir === 'left' || dragDir === 'right' ? 'x' : 'y';
+                    start = axis === 'x' ? e.clientX : e.clientY;
                     w = parseInt(style.getPropertyValue('width'));
                     h = parseInt(style.getPropertyValue('height'));
 
@@ -117,8 +117,8 @@ angular.module('angularResizable', [])
                         element[0].appendChild(grabber);
                         grabber.ondragstart = function() { return false }
                         grabber.addEventListener('mousedown', function(e) {
-                          disabled = (scope.rDisabled == 'true');
-                          if (!disabled && e.which == 1) {
+                          disabled = (scope.rDisabled === 'true');
+                          if (!disabled && e.which === 1) {
                             // left mouse click
                             dragStart(e, direction);
                           }
