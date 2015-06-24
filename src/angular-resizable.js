@@ -15,14 +15,14 @@ angular.module('angularResizable', [])
         return {
             restrict: 'AE',
             scope: {
-                rDirections: "=",
-                rCenteredX: "=",
-                rCenteredY: "=",
-                rWidth: "=",
-                rHeight: "=",
-                rFlex: "=",
-                rGrabber: "@",
-                rDisabled: "@"
+                rDirections: '=',
+                rCenteredX: '=',
+                rCenteredY: '=',
+                rWidth: '=',
+                rHeight: '=',
+                rFlex: '=',
+                rGrabber: '@',
+                rDisabled: '@'
             },
             link: function(scope, element, attr) {
 
@@ -72,11 +72,11 @@ angular.module('angularResizable', [])
                             break;
                     }
                     updateInfo();
-                    throttle(function() { scope.$emit("angular-resizable.resizing", info);});
+                    throttle(function() { scope.$emit('angular-resizable.resizing', info);});
                 };
                 var dragEnd = function(e) {
                     updateInfo();
-                    scope.$emit("angular-resizable.resizeEnd", info);
+                    scope.$emit('angular-resizable.resizeEnd', info);
                     scope.$apply();
                     document.removeEventListener('mouseup', dragEnd, false);
                     document.removeEventListener('mousemove', dragging, false);
@@ -86,8 +86,8 @@ angular.module('angularResizable', [])
                     dragDir = direction;
                     axis = dragDir == 'left' || dragDir == 'right' ? 'x' : 'y';
                     start = axis == 'x' ? e.clientX : e.clientY;
-                    w = parseInt(style.getPropertyValue("width"));
-                    h = parseInt(style.getPropertyValue("height"));
+                    w = parseInt(style.getPropertyValue('width'));
+                    h = parseInt(style.getPropertyValue('height'));
 
                     //prevent transition while dragging
                     element.addClass('no-transition');
@@ -102,7 +102,7 @@ angular.module('angularResizable', [])
                     e.returnValue = false;
 
                     updateInfo();
-                    scope.$emit("angular-resizable.resizeStart", info);
+                    scope.$emit('angular-resizable.resizeStart', info);
                     scope.$apply();
                 };
 
