@@ -48,13 +48,14 @@ angular.module('angularResizable', [])
                     axis,
                     info = {};
 
-                var updateInfo = function() {
+                var updateInfo = function(e) {
                     info.width = false; info.height = false;
                     if(axis == 'x')
                         info.width = scope.rFlex ? parseInt(element[0].style.flexBasis) : parseInt(element[0].style.width);
                     else
                         info.height = scope.rFlex ? parseInt(element[0].style.flexBasis) : parseInt(element[0].style.height);
                     info.id = element[0].id;
+                    info.evt = e;
                 }
 
                 var dragging = function(e) {
@@ -77,11 +78,11 @@ angular.module('angularResizable', [])
                             else {            element[0].style.width = w + (offset * vx) + 'px'; }
                             break;
                     }
-                    updateInfo();
+                    updateInfo(e);
                     throttle(function() { scope.$emit("angular-resizable.resizing", info);});
                 };
                 var dragEnd = function(e) {
-                    updateInfo();
+                    updateInfo(e);
                     scope.$emit("angular-resizable.resizeEnd", info);
                     scope.$apply();
                     document.removeEventListener('mouseup', dragEnd, false);
@@ -107,7 +108,7 @@ angular.module('angularResizable', [])
                     e.cancelBubble = true;
                     e.returnValue = false;
 
-                    updateInfo();
+                    updateInfo(e);
                     scope.$emit("angular-resizable.resizeStart", info);
                     scope.$apply();
                 };
