@@ -22,7 +22,8 @@ angular.module('angularResizable', [])
                 rHeight: "=",
                 rFlex: "=",
                 rGrabber: "@",
-                rDisabled: "@"
+                rDisabled: "@",
+				rGrid: "="
             },
             link: function(scope, element, attr) {
 
@@ -37,6 +38,8 @@ angular.module('angularResizable', [])
                 element.addClass('resizable');
 
                 var style = window.getComputedStyle(element[0], null),
+					originalW,
+					originalH,
                     w,
                     h,
                     dir = scope.rDirections,
@@ -50,16 +53,26 @@ angular.module('angularResizable', [])
 
                 var updateInfo = function(e) {
                     info.width = false; info.height = false;
-                    if(axis == 'x')
+                    if(axis == 'x')						
                         info.width = scope.rFlex ? parseInt(element[0].style.flexBasis) : parseInt(element[0].style.width);
                     else
                         info.height = scope.rFlex ? parseInt(element[0].style.flexBasis) : parseInt(element[0].style.height);
                     info.id = element[0].id;
                     info.evt = e;
-                }
+					info.originalWidth = originalW;
+					info.originalHeight = originalH;
+                };
 
                 var dragging = function(e) {
-                    var offset = axis == 'x' ? start - e.clientX : start - e.clientY;
+                    var offset = (axis == 'x') ? start - e.clientX : start - e.clientY;
+					
+					// bind resize to grid
+					var gridX = scope.rGrid[0] || 1,
+						gridY = scope.rGrid[1] || 1;
+					offset = (axis == 'x') 
+								? Math.round(((w+offset) - w) / gridX) * gridX
+								: Math.round(((h+offset) - h) / gridY) * gridY;		
+
                     switch(dragDir) {
                         case 'top':
                             if(scope.rFlex) { element[0].style.flexBasis = h + (offset * vy) + 'px'; }
@@ -78,6 +91,7 @@ angular.module('angularResizable', [])
                             else {            element[0].style.width = w + (offset * vx) + 'px'; }
                             break;
                     }
+					
                     updateInfo(e);
                     throttle(function() { scope.$emit("angular-resizable.resizing", info);});
                 };
@@ -93,8 +107,15 @@ angular.module('angularResizable', [])
                     dragDir = direction;
                     axis = dragDir == 'left' || dragDir == 'right' ? 'x' : 'y';
                     start = axis == 'x' ? e.clientX : e.clientY;
-                    w = parseInt(style.getPropertyValue("width"));
-                    h = parseInt(style.getPropertyValue("height"));
+					
+					// IE returns different values using "style.getPropertyValue"
+					//w = parseInt(style.getPropertyValue("width"));
+                    //h = parseInt(style.getPropertyValue("height"));
+					var elRect = element[0].getBoundingClientRect();
+                    w = parseInt(elRect.width);
+                    h = parseInt(elRect.height);					
+					originalW = w;
+					originalH = h;
 
                     //prevent transition while dragging
                     element.addClass('no-transition');
