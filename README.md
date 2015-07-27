@@ -36,13 +36,15 @@ This event is emitted at the beginning of a resize with the following info objec
 - `info.width` : The width of the directive at time of resize start. **Will be false if resizing vertically
 - `info.height` : The height of the directive at time of resize start. **Will be false if resizing horizontally
 - `info.id` : The id of the directive. **Will be false if there is no id set.
+- `info.evt` : original mouse event object
 
 ### angular-resizable.resizing
 
 This event is emitted during the resizing of the element with the following object as an argument:
 - `info.width` : The width of the directive at time of resize end. **Will be false if resizing vertically
 - `info.height` : The height of the directive at time of resize end. **Will be false if resizing horizontally
-- `info.id` : The id of the directive. **Will be false if there is no id
+- `info.id` : The id of the directive. **Will be false if there is no id set.
+- `info.evt` : original mouse event object
 
 ### angular-resizable.resizeEnd
 
@@ -50,6 +52,7 @@ This event is emitted at the end of a resize with the following object as an arg
 - `info.width` : The width of the directive at time of resize end. **Will be false if resizing vertically
 - `info.height` : The height of the directive at time of resize end. **Will be false if resizing horizontally
 - `info.id` : The id of the directive. **Will be false if there is no id set.
+- `info.evt` : original mouse event object
 
 ## version notes
 
