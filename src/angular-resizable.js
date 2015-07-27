@@ -63,14 +63,20 @@ angular.module('angularResizable', [])
                     var prop, offset = axis === 'x' ? start - e.clientX : start - e.clientY;
                     switch(dragDir) {
                         case 'top':
-                        case 'bottom':
                             prop = scope.rFlex ? flexBasis : 'height';
                             element[0].style[prop] = h + (offset * vy) + 'px';
                             break;
+                        case 'bottom':
+                            prop = scope.rFlex ? flexBasis : 'height';
+                            element[0].style[prop] = h - (offset * vy) + 'px';
+                            break;
                         case 'right':
-                        case 'left':
                             prop = scope.rFlex ? flexBasis : 'width';
                             element[0].style[prop] = w - (offset * vx) + 'px';
+                            break;
+                        case 'left':
+                            prop = scope.rFlex ? flexBasis : 'width';
+                            element[0].style[prop] = w + (offset * vx) + 'px';
                             break;
                     }
                     updateInfo();
