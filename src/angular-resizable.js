@@ -15,16 +15,18 @@ angular.module('angularResizable', [])
         return {
             restrict: 'AE',
             scope: {
-                rDirections: "=",
-                rCenteredX: "=",
-                rCenteredY: "=",
-                rWidth: "=",
-                rHeight: "=",
-                rFlex: "=",
-                rGrabber: "@",
-                rDisabled: "@"
+                rDirections: '=',
+                rCenteredX: '=',
+                rCenteredY: '=',
+                rWidth: '=',
+                rHeight: '=',
+                rFlex: '=',
+                rGrabber: '@',
+                rDisabled: '@'
             },
             link: function(scope, element, attr) {
+                var flexBasis = 'flexBasis' in document.documentElement.style ? 'flexBasis' :
+                    'webkitFlexBasis' in document.documentElement.style ? 'webkitFlexBasis' : 'flexBasis';
 
                 // register watchers on width and height attributes if they are set
                 scope.$watch('rWidth', function(value){
@@ -50,40 +52,40 @@ angular.module('angularResizable', [])
 
                 var updateInfo = function(e) {
                     info.width = false; info.height = false;
-                    if(axis == 'x')
-                        info.width = scope.rFlex ? parseInt(element[0].style.flexBasis) : parseInt(element[0].style.width);
+                    if(axis === 'x')
+                        info.width = parseInt(element[0].style[scope.rFlex ? flexBasis : 'width']);
                     else
-                        info.height = scope.rFlex ? parseInt(element[0].style.flexBasis) : parseInt(element[0].style.height);
+                        info.height = parseInt(element[0].style[scope.rFlex ? flexBasis : 'height']);
                     info.id = element[0].id;
                     info.evt = e;
-                }
+                };
 
                 var dragging = function(e) {
-                    var offset = axis == 'x' ? start - e.clientX : start - e.clientY;
+                    var prop, offset = axis === 'x' ? start - e.clientX : start - e.clientY;
                     switch(dragDir) {
                         case 'top':
-                            if(scope.rFlex) { element[0].style.flexBasis = h + (offset * vy) + 'px'; }
-                            else {            element[0].style.height = h + (offset * vy) + 'px'; }
-                            break;
-                        case 'right':
-                            if(scope.rFlex) { element[0].style.flexBasis = w - (offset * vx) + 'px'; }
-                            else {            element[0].style.width = w - (offset * vx) + 'px'; }
+                            prop = scope.rFlex ? flexBasis : 'height';
+                            element[0].style[prop] = h + (offset * vy) + 'px';
                             break;
                         case 'bottom':
-                            if(scope.rFlex) { element[0].style.flexBasis = h - (offset * vy) + 'px'; }
-                            else {            element[0].style.height = h - (offset * vy) + 'px'; }
+                            prop = scope.rFlex ? flexBasis : 'height';
+                            element[0].style[prop] = h - (offset * vy) + 'px';
+                            break;
+                        case 'right':
+                            prop = scope.rFlex ? flexBasis : 'width';
+                            element[0].style[prop] = w - (offset * vx) + 'px';
                             break;
                         case 'left':
-                            if(scope.rFlex) { element[0].style.flexBasis = w + (offset * vx) + 'px'; }
-                            else {            element[0].style.width = w + (offset * vx) + 'px'; }
+                            prop = scope.rFlex ? flexBasis : 'width';
+                            element[0].style[prop] = w + (offset * vx) + 'px';
                             break;
                     }
                     updateInfo(e);
-                    throttle(function() { scope.$emit("angular-resizable.resizing", info);});
+                    throttle(function() { scope.$emit('angular-resizable.resizing', info);});
                 };
                 var dragEnd = function(e) {
-                    updateInfo(e);
-                    scope.$emit("angular-resizable.resizeEnd", info);
+                    updateInfo();
+                    scope.$emit('angular-resizable.resizeEnd', info);
                     scope.$apply();
                     document.removeEventListener('mouseup', dragEnd, false);
                     document.removeEventListener('mousemove', dragging, false);
@@ -91,10 +93,10 @@ angular.module('angularResizable', [])
                 };
                 var dragStart = function(e, direction) {
                     dragDir = direction;
-                    axis = dragDir == 'left' || dragDir == 'right' ? 'x' : 'y';
-                    start = axis == 'x' ? e.clientX : e.clientY;
-                    w = parseInt(style.getPropertyValue("width"));
-                    h = parseInt(style.getPropertyValue("height"));
+                    axis = dragDir === 'left' || dragDir === 'right' ? 'x' : 'y';
+                    start = axis === 'x' ? e.clientX : e.clientY;
+                    w = parseInt(style.getPropertyValue('width'));
+                    h = parseInt(style.getPropertyValue('height'));
 
                     //prevent transition while dragging
                     element.addClass('no-transition');
@@ -109,30 +111,26 @@ angular.module('angularResizable', [])
                     e.returnValue = false;
 
                     updateInfo(e);
-                    scope.$emit("angular-resizable.resizeStart", info);
+                    scope.$emit('angular-resizable.resizeStart', info);
                     scope.$apply();
                 };
 
-                for(var i=0;i<dir.length;i++) {
-                    (function () {
-                        var grabber = document.createElement('div'),
-                            direction = dir[i];
+                dir.forEach(function (direction) {
+                    var grabber = document.createElement('div');
 
-                        // add class for styling purposes
-                        grabber.setAttribute('class', 'rg-' + dir[i]);
-                        grabber.innerHTML = inner;
-                        element[0].appendChild(grabber);
-                        grabber.ondragstart = function() { return false }
-                        grabber.addEventListener('mousedown', function(e) {
-                          disabled = (scope.rDisabled == 'true');
-                          if (!disabled && e.which == 1) {
+                    // add class for styling purposes
+                    grabber.setAttribute('class', 'rg-' + direction);
+                    grabber.innerHTML = inner;
+                    element[0].appendChild(grabber);
+                    grabber.ondragstart = function() { return false; };
+                    grabber.addEventListener('mousedown', function(e) {
+                        var disabled = (scope.rDisabled === 'true');
+                        if (!disabled && e.which === 1) {
                             // left mouse click
                             dragStart(e, direction);
-                          }
-                        }, false);
-                    }())
-                }
-
+                        }
+                    }, false);
+                });
             }
-        }
+        };
     });
