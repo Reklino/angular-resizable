@@ -26,7 +26,8 @@ angular.module('angularResizable', [])
             },
             link: function(scope, element, attr) {
                 var flexBasis = 'flexBasis' in document.documentElement.style ? 'flexBasis' :
-                    'webkitFlexBasis' in document.documentElement.style ? 'webkitFlexBasis' : 'flexBasis';
+                    'webkitFlexBasis' in document.documentElement.style ? 'webkitFlexBasis' :
+                    'msFlexPreferredSize' in document.documentElement.style ? 'msFlexPreferredSize' : 'flexBasis';
 
                 // register watchers on width and height attributes if they are set
                 scope.$watch('rWidth', function(value){
