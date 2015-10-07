@@ -33,8 +33,10 @@ angular.module('angularResizable', [])
                 scope.$watch('rWidth', function(value){
                     element[0].style.width = scope.rWidth + 'px';
                 });
-                scope.$watch('rHeight', function(value){
-                    element[0].style.height = scope.rHeight + 'px';
+                scope.$watch('rHeight', function(value, oldValue){
+                    if (value != oldValue) {
+                        element[0].style.height = scope.rHeight + 'px';
+                    }
                 });
 
                 element.addClass('resizable');
@@ -49,6 +51,7 @@ angular.module('angularResizable', [])
                     start,
                     dragDir,
                     axis,
+                    minSz, maxSz,
                     info = {};
 
                 var updateInfo = function(e) {
@@ -61,24 +64,34 @@ angular.module('angularResizable', [])
                     info.evt = e;
                 };
 
+                function bound(val) {
+                    if (val < minSz) {
+                        return minSz
+                    }
+                    if (maxSz < val) {
+                        return maxSz
+                    }
+                    return val
+                }
+
                 var dragging = function(e) {
                     var prop, offset = axis === 'x' ? start - e.clientX : start - e.clientY;
                     switch(dragDir) {
                         case 'top':
                             prop = scope.rFlex ? flexBasis : 'height';
-                            element[0].style[prop] = h + (offset * vy) + 'px';
+                            element[0].style[prop] = bound(h + (offset * vy)) + 'px';
                             break;
                         case 'bottom':
                             prop = scope.rFlex ? flexBasis : 'height';
-                            element[0].style[prop] = h - (offset * vy) + 'px';
+                            element[0].style[prop] = bound(h - (offset * vy)) + 'px';
                             break;
                         case 'right':
                             prop = scope.rFlex ? flexBasis : 'width';
-                            element[0].style[prop] = w - (offset * vx) + 'px';
+                            element[0].style[prop] = bound(w - (offset * vx)) + 'px';
                             break;
                         case 'left':
                             prop = scope.rFlex ? flexBasis : 'width';
-                            element[0].style[prop] = w + (offset * vx) + 'px';
+                            element[0].style[prop] = bound(w + (offset * vx)) + 'px';
                             break;
                     }
                     updateInfo(e);
@@ -98,6 +111,14 @@ angular.module('angularResizable', [])
                     start = axis === 'x' ? e.clientX : e.clientY;
                     w = parseInt(style.getPropertyValue('width'));
                     h = parseInt(style.getPropertyValue('height'));
+
+		    if (axis === 'x') {
+		      minSz = parseInt(element[0].style["min-width"])  || 0;
+		      maxSz = parseInt(element[0].style["max-width"])  || 10000;
+		    } else {
+		      minSz = parseInt(element[0].style["min-height"]) || 0;
+		      maxSz = parseInt(element[0].style["max-height"]) || 10000;
+		    }
 
                     //prevent transition while dragging
                     element.addClass('no-transition');
