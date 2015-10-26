@@ -23,7 +23,8 @@ angular.module('angularResizable', [])
                 rFlex: "=",
                 rGrabber: "@",
                 rDisabled: "@",
-				rGrid: "="
+				rGrid: "=",
+				rLimitResizeTo: '=?'
             },
             link: function(scope, element, attr) {
 
@@ -64,29 +65,38 @@ angular.module('angularResizable', [])
                 };
 
                 var dragging = function(e) {
-                    var offset = (axis == 'x') ? start - e.clientX : start - e.clientY;
-					
-					// bind resize to grid
-					var gridX = scope.rGrid[0] || 1,
-						gridY = scope.rGrid[1] || 1;
-					offset = (axis == 'x') 
-								? Math.round(((w+offset) - w) / gridX) * gridX
-								: Math.round(((h+offset) - h) / gridY) * gridY;		
+					var	offset = (axis == 'x') ? start - e.clientX : start - e.clientY,
+					   	gridX = scope.rGrid[0] || 1,
+						gridY = scope.rGrid[1] || 1,
+					   	limitResizeTo = scope.rLimitResizeTo,
+					   	futureDimension;
 
-                    switch(dragDir) {
+					offset = (axis == 'x') 
+								? Math.round(offset / gridX) * gridX
+								: Math.round(offset / gridY) * gridY;	
+					 
+					switch(dragDir) {
                         case 'top':
+							futureDimension = h + (offset * vy);
+							if ( angular.isDefined(limitResizeTo) && futureDimension > originalH+(gridY*limitResizeTo) ) return;
                             if(scope.rFlex) { element[0].style.flexBasis = h + (offset * vy) + 'px'; }
                             else {            element[0].style.height = h + (offset * vy) + 'px'; }
                             break;
                         case 'right':
-                            if(scope.rFlex) { element[0].style.flexBasis = w - (offset * vx) + 'px'; }
-                            else {            element[0].style.width = w - (offset * vx) + 'px'; }
+							futureDimension = w - (offset * vx);
+							if ( angular.isDefined(limitResizeTo) && futureDimension > originalW+(gridX*limitResizeTo) ) return;
+                            if(scope.rFlex) { element[0].style.flexBasis = futureDimension + 'px'; }
+                            else {            element[0].style.width = futureDimension + 'px'; }
                             break;
                         case 'bottom':
+							futureDimension = h - (offset * vy);
+							if ( angular.isDefined(limitResizeTo) && futureDimension < originalH-(gridY*limitResizeTo) ) return;
                             if(scope.rFlex) { element[0].style.flexBasis = h - (offset * vy) + 'px'; }
                             else {            element[0].style.height = h - (offset * vy) + 'px'; }
                             break;
                         case 'left':
+							futureDimension = w + (offset * vx);
+							if ( angular.isDefined(limitResizeTo) && futureDimension < originalW-(gridX*limitResizeTo) ) return;
                             if(scope.rFlex) { element[0].style.flexBasis = w + (offset * vx) + 'px'; }
                             else {            element[0].style.width = w + (offset * vx) + 'px'; }
                             break;
