@@ -25,6 +25,7 @@ rCenteredY | false | boolean | If set as true, the velocity of vertical resizing
 rWidth | false | integer or $scope variable | If set, the resizable element will be rendered with a predefined width relative to this value in pixels and a watcher will be set on the 'rWidth' attribute. [See this codepen](http://codepen.io/Reklino/pen/EjKXqg).
 rHeight | false | integer or $scope variable | If set, the resizable element will be rendered with a predefined height relative to this value in pixels and a watcher will be set on the 'rHeight' attribute. [See this codepen](http://codepen.io/Reklino/pen/EjKXqg).
 rGrabber | `<span></span>` | string | Defines custom inner html for the grabber.
+rNoThrottle | false | boolean | Disables `angular-resizable.resizing` throttling (see events section below).
 
 ## Events
 
@@ -40,7 +41,7 @@ This event is emitted at the beginning of a resize with the following info objec
 
 ### angular-resizable.resizing
 
-This event is emitted during the resizing of the element with the following object as an argument:
+Called repeatedly while the mouse is being moved. By default, only calls once every 100ms to keep CPU usage low. For smooth resizing, use the `rNoThrottle` attribute. This event is emitted during the resizing of the element with the following object as an argument:
 - `info.width` : The width of the directive at time of resize end. **Will be false if resizing vertically
 - `info.height` : The height of the directive at time of resize end. **Will be false if resizing horizontally
 - `info.id` : The id of the directive. **Will be false if there is no id set.
