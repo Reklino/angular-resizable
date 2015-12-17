@@ -42,7 +42,7 @@ angular.module('angularResizable', [])
                 var style = window.getComputedStyle(element[0], null),
                     w,
                     h,
-                    dir = scope.rDirections,
+                    dir = scope.rDirections || ['right'],
                     vx = scope.rCenteredX ? 2 : 1, // if centered double velocity
                     vy = scope.rCenteredY ? 2 : 1, // if centered double velocity
                     inner = scope.rGrabber ? scope.rGrabber : '<span></span>',
