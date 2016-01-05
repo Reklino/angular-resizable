@@ -61,8 +61,16 @@ angular.module('angularResizable', [])
                     info.evt = e;
                 };
 
+                var getClientX = function(e) {
+                    return e.touches ? e.touches[0].clientX : e.clientX;
+                };
+
+                var getClientY = function(e) {
+                    return e.touches ? e.touches[0].clientY : e.clientY;
+                };
+
                 var dragging = function(e) {
-                    var prop, offset = axis === 'x' ? start - e.clientX : start - e.clientY;
+                    var prop, offset = axis === 'x' ? start - getClientX(e) : start - getClientY(e);
                     switch(dragDir) {
                         case 'top':
                             prop = scope.rFlex ? flexBasis : 'height';
@@ -90,12 +98,14 @@ angular.module('angularResizable', [])
                     scope.$apply();
                     document.removeEventListener('mouseup', dragEnd, false);
                     document.removeEventListener('mousemove', dragging, false);
+                    document.removeEventListener('touchend', dragEnd, false);
+                    document.removeEventListener('touchmove', dragging, false);
                     element.removeClass('no-transition');
                 };
                 var dragStart = function(e, direction) {
                     dragDir = direction;
                     axis = dragDir === 'left' || dragDir === 'right' ? 'x' : 'y';
-                    start = axis === 'x' ? e.clientX : e.clientY;
+                    start = axis === 'x' ? getClientX(e) : getClientY(e);
                     w = parseInt(style.getPropertyValue('width'));
                     h = parseInt(style.getPropertyValue('height'));
 
@@ -104,6 +114,8 @@ angular.module('angularResizable', [])
 
                     document.addEventListener('mouseup', dragEnd, false);
                     document.addEventListener('mousemove', dragging, false);
+                    document.addEventListener('touchend', dragEnd, false);
+                    document.addEventListener('touchmove', dragging, false);
 
                     // Disable highlighting while dragging
                     if(e.stopPropagation) e.stopPropagation();
@@ -124,13 +136,16 @@ angular.module('angularResizable', [])
                     grabber.innerHTML = inner;
                     element[0].appendChild(grabber);
                     grabber.ondragstart = function() { return false; };
-                    grabber.addEventListener('mousedown', function(e) {
+
+                    var down = function(e) {
                         var disabled = (scope.rDisabled === 'true');
-                        if (!disabled && e.which === 1) {
-                            // left mouse click
+                        if (!disabled && (e.which === 1 || e.touches)) {
+                            // left mouse click or touch screen
                             dragStart(e, direction);
                         }
-                    }, false);
+                    };
+                    grabber.addEventListener('mousedown', down, false);
+                    grabber.addEventListener('touchstart', down, false);
                 });
             }
         };
