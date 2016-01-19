@@ -34,25 +34,25 @@ For an example using the events, [see this codepen](http://codepen.io/Reklino/pe
 ### angular-resizable.resizeStart
 
 This event is emitted at the beginning of a resize with the following info object:
-- `info.width` : The width of the directive at time of resize start. **Will be false if resizing vertically
-- `info.height` : The height of the directive at time of resize start. **Will be false if resizing horizontally
-- `info.id` : The id of the directive. **Will be false if there is no id set.
+- `info.width` : The width of the directive at time of resize start. **Will be false if resizing vertically**
+- `info.height` : The height of the directive at time of resize start. **Will be false if resizing horizontally**
+- `info.id` : The id of the directive. **Will be false if there is no id set.**
 - `info.evt` : original mouse event object
 
 ### angular-resizable.resizing
 
 Called repeatedly while the mouse is being moved. By default, only calls once every 100ms to keep CPU usage low. For smooth resizing, use the `rNoThrottle` attribute. This event is emitted during the resizing of the element with the following object as an argument:
-- `info.width` : The width of the directive at time of resize end. **Will be false if resizing vertically
-- `info.height` : The height of the directive at time of resize end. **Will be false if resizing horizontally
-- `info.id` : The id of the directive. **Will be false if there is no id set.
+- `info.width` : The width of the directive at time of resize end. **Will be false if resizing vertically**
+- `info.height` : The height of the directive at time of resize end. **Will be false if resizing horizontally**
+- `info.id` : The id of the directive. **Will be false if there is no id set.**
 - `info.evt` : original mouse event object
 
 ### angular-resizable.resizeEnd
 
 This event is emitted at the end of a resize with the following object as an argument:
-- `info.width` : The width of the directive at time of resize end. **Will be false if resizing vertically
-- `info.height` : The height of the directive at time of resize end. **Will be false if resizing horizontally
-- `info.id` : The id of the directive. **Will be false if there is no id set.
+- `info.width` : The width of the directive at time of resize end. **Will be false if resizing vertically**
+- `info.height` : The height of the directive at time of resize end. **Will be false if resizing horizontally**
+- `info.id` : The id of the directive. **Will be false if there is no id set.**
 - `info.evt` : original mouse event object
 
 ## version notes
