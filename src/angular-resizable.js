@@ -1,5 +1,5 @@
 angular.module('angularResizable', [])
-    .directive('resizable', function() {
+    .directive('resizable', ['$compile', '$rootScope', function($compile, $rootScope) {
         var toCall;
         function throttle(fun) {
             if (toCall === undefined) {
@@ -40,13 +40,19 @@ angular.module('angularResizable', [])
 
                 element.addClass('resizable');
 
+                var getCompiledGrabber = function(grabber)
+                {
+                    var linkFunction = $compile(angular.element(grabber));
+                    return linkFunction(scope.$parent)[0];
+                };
+
                 var style = window.getComputedStyle(element[0], null),
                     w,
                     h,
                     dir = scope.rDirections || ['right'],
                     vx = scope.rCenteredX ? 2 : 1, // if centered double velocity
                     vy = scope.rCenteredY ? 2 : 1, // if centered double velocity
-                    inner = scope.rGrabber ? scope.rGrabber : '<span></span>',
+                    inner = getCompiledGrabber(scope.rGrabber ? scope.rGrabber : '<span></span>'),
                     start,
                     dragDir,
                     axis,
@@ -141,7 +147,7 @@ angular.module('angularResizable', [])
 
                     // add class for styling purposes
                     grabber.setAttribute('class', 'rg-' + direction);
-                    grabber.innerHTML = inner;
+                    grabber.appendChild(inner);
                     element[0].appendChild(grabber);
                     grabber.ondragstart = function() { return false; };
 
@@ -157,4 +163,4 @@ angular.module('angularResizable', [])
                 });
             }
         };
-    });
+    }]);
