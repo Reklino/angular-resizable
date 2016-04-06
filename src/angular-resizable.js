@@ -23,7 +23,9 @@ angular.module('angularResizable', [])
                 rFlex: '=',
                 rGrabber: '@',
                 rDisabled: '@',
-                rNoThrottle: '='
+                rNoThrottle: '=',
+                rEnd: '&',
+                rStart: '&'
             },
             link: function(scope, element, attr) {
                 var flexBasis = 'flexBasis' in document.documentElement.style ? 'flexBasis' :
@@ -103,6 +105,9 @@ angular.module('angularResizable', [])
                 var dragEnd = function(e) {
                     updateInfo();
                     scope.$emit('angular-resizable.resizeEnd', info);
+                    if(angular.isFunction(scope.rEnd)) {
+                        scope.rEnd({info:info});
+                    }
                     scope.$apply();
                     document.removeEventListener('mouseup', dragEnd, false);
                     document.removeEventListener('mousemove', dragging, false);
@@ -133,6 +138,9 @@ angular.module('angularResizable', [])
 
                     updateInfo(e);
                     scope.$emit('angular-resizable.resizeStart', info);
+                    if(angular.isFunction(scope.rStart)) {
+                        scope.rStart({info:info});
+                    }
                     scope.$apply();
                 };
 
