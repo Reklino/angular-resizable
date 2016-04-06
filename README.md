@@ -26,6 +26,8 @@ rWidth | false | integer or $scope variable | If set, the resizable element will
 rHeight | false | integer or $scope variable | If set, the resizable element will be rendered with a predefined height relative to this value in pixels and a watcher will be set on the 'rHeight' attribute. [See this codepen](http://codepen.io/Reklino/pen/EjKXqg).
 rGrabber | `<span></span>` | string | Defines custom inner html for the grabber.
 rNoThrottle | false | boolean | Disables `angular-resizable.resizing` throttling (see events section below).
+rStart | undefined | function | callback called with `info` when resize starts. (analogous to the `angular-resizable.resizeStart`).
+rEnd | undefined | function | callback called with `info` when resize ends. (analogous to the `angular-resizable.resizeEnd`).
 
 ## Events
 
