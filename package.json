@@ -1,7 +1,7 @@
 {
-  "name": "angular-resizable",
-  "version": "1.3.1",
-  "description": "A directive for creating resizable containers in angular.",
+  "name": "angular-resizable-spencer",
+  "version": "1.4.0",
+  "description": "A directive for creating resizable containers in angular. Fork of angular-resizable",
   "keywords": [
     "angular",
     "angular-js",
@@ -23,7 +23,7 @@
   "author": "Reklino",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Reklinoz/angular-resizable/issues"
+    "url": "https://github.com/spencersteers/angular-resizable-spencer/issues"
   },
   "homepage": "https://github.com/Reklino/angular-resizable",
   "devDependencies": {
