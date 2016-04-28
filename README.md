@@ -1,4 +1,7 @@
-# angular-resizable
+# This is a fork of https://github.com/Reklino/angular-resizable
+`npm install angular-resizable-spencer`
+
+# angular-resizable-spencer
 A directive for creating resizable containers.
 
 ## Why?
