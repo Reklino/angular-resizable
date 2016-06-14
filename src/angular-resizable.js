@@ -23,7 +23,8 @@ angular.module('angularResizable', [])
                 rFlex: '=',
                 rGrabber: '@',
                 rDisabled: '@',
-                rNoThrottle: '='
+                rNoThrottle: '=',
+                rLimit: "="
             },
             link: function(scope, element, attr) {
                 var flexBasis = 'flexBasis' in document.documentElement.style ? 'flexBasis' :
@@ -47,6 +48,8 @@ angular.module('angularResizable', [])
                     vx = scope.rCenteredX ? 2 : 1, // if centered double velocity
                     vy = scope.rCenteredY ? 2 : 1, // if centered double velocity
                     inner = scope.rGrabber ? scope.rGrabber : '<span></span>',
+                    limit = !!scope.rLimit,
+                    limitMargin = scope.rLimit,
                     start,
                     dragDir,
                     axis,
@@ -72,6 +75,12 @@ angular.module('angularResizable', [])
 
                 var dragging = function(e) {
                     var prop, offset = axis === 'x' ? start - getClientX(e) : start - getClientY(e);
+                    if (limit) {
+                      var threshold = axis === 'x' ? getClientX(e) + limitMargin - window.innerWidth : getClientY(e) + limitMargin - window.innerHeight;
+                      if (threshold >= 0) {
+                        return;
+                      }
+                    }
                     switch(dragDir) {
                         case 'top':
                             prop = scope.rFlex ? flexBasis : 'height';
