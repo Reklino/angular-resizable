@@ -18,14 +18,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Reklino/angular-resizable.git"
+    "url": "https://github.com/gehrmang/angular-resizable.git"
   },
-  "author": "Reklino",
+  "author": "GehrmanG",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Reklino/angular-resizable/issues"
+    "url": "https://github.com/gehrmang/angular-resizable/issues"
   },
-  "homepage": "https://github.com/Reklino/angular-resizable",
+  "homepage": "https://github.com/gehrmang/angular-resizable",
   "devDependencies": {
     "gulp": "^3.8.11",
     "gulp-minify-css": "^1.1.1",
