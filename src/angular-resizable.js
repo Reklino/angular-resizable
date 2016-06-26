@@ -25,7 +25,9 @@ angular.module('angularResizable', [])
                 rGrabber: '@',
                 rDisabled: '=',
                 rNoThrottle: '=',
-                rParent: '='
+                rParent: '=',
+                rGrid: "=",
+                rLimitResizeTo: '=?'
             },
             link: function(scope, elem, attr) {
                 var element = elem;
@@ -48,6 +50,8 @@ angular.module('angularResizable', [])
                 element.addClass('resizable');
 
                 var style = window.getComputedStyle(element[0], null),
+                    originalW,
+                    originalH,
                     w,
                     h,
                     dir = scope.rDirections || ['right'],
@@ -63,11 +67,14 @@ angular.module('angularResizable', [])
                     info.width = false;
                     info.height = false;
                     if (axis === 'x')
+
                         info.width = parseInt(element[0].style[scope.rFlex ? flexBasis : 'width']);
                     else
                         info.height = parseInt(element[0].style[scope.rFlex ? flexBasis : 'height']);
                     info.id = element[0].id;
                     info.evt = e;
+                    info.originalWidth = originalW;
+                    info.originalHeight = originalH;
                 };
 
                 var getClientX = function(e) {
@@ -80,24 +87,53 @@ angular.module('angularResizable', [])
 
                 var dragging = function(e) {
                     var prop, offset = axis === 'x' ? start - getClientX(e) : start - getClientY(e);
+
+                    var gridX = scope.rGrid ? scope.rGrid[0] : 1,
+                        gridY = scope.rGrid ? scope.rGrid[1] : 1,
+                        limitResizeTo = scope.rLimitResizeTo,
+                        futureDimension;
+
+                    offset = (axis == 'x') ? Math.round(offset / gridX) * gridX : Math.round(offset / gridY) * gridY;
+
                     switch (dragDir) {
                         case 'top':
+                            futureDimension = h + (offset * vy);
+                            if (angular.isDefined(limitResizeTo) && futureDimension > originalH + (gridY * limitResizeTo)) {
+                                return;
+                            }
+
                             prop = scope.rFlex ? flexBasis : 'height';
                             element[0].style[prop] = h + (offset * vy) + 'px';
                             break;
                         case 'bottom':
+                            futureDimension = h - (offset * vy);
+                            if (angular.isDefined(limitResizeTo) && futureDimension < originalH - (gridY * limitResizeTo)) {
+                                return;
+                            }
+
                             prop = scope.rFlex ? flexBasis : 'height';
                             element[0].style[prop] = h - (offset * vy) + 'px';
                             break;
                         case 'right':
+                            futureDimension = w - (offset * vx);
+                            if (angular.isDefined(limitResizeTo) && futureDimension > originalW + (gridX * limitResizeTo)) {
+                                return;
+                            }
+
                             prop = scope.rFlex ? flexBasis : 'width';
-                            element[0].style[prop] = w - (offset * vx) + 'px';
+                            element[0].style[prop] = futureDimension + 'px';
                             break;
                         case 'left':
+                            futureDimension = w + (offset * vx);
+                            if (angular.isDefined(limitResizeTo) && futureDimension < originalW - (gridX * limitResizeTo)) {
+                                return;
+                            }
+
                             prop = scope.rFlex ? flexBasis : 'width';
                             element[0].style[prop] = w + (offset * vx) + 'px';
                             break;
                     }
+
                     updateInfo(e);
 
                     function resizingEmit() {
@@ -111,6 +147,7 @@ angular.module('angularResizable', [])
                 };
                 var dragEnd = function(e) {
                     updateInfo();
+
                     scope.$emit('angular-resizable.resizeEnd', info);
                     scope.$apply();
                     document.removeEventListener('mouseup', dragEnd, false);
@@ -123,12 +160,14 @@ angular.module('angularResizable', [])
                     dragDir = direction;
                     axis = dragDir === 'left' || dragDir === 'right' ? 'x' : 'y';
                     start = axis === 'x' ? getClientX(e) : getClientY(e);
-                    w = parseInt(style.getPropertyValue('width'));
-                    h = parseInt(style.getPropertyValue('height'));
+                    var elRect = element[0].getBoundingClientRect();
+                    w = parseInt(elRect.width);
+                    h = parseInt(elRect.height);
+                    originalW = w;
+                    originalH = h;
 
                     //prevent transition while dragging
                     element.addClass('no-transition');
-
                     document.addEventListener('mouseup', dragEnd, false);
                     document.addEventListener('mousemove', dragging, false);
                     document.addEventListener('touchend', dragEnd, false);
@@ -144,7 +183,6 @@ angular.module('angularResizable', [])
                     scope.$emit('angular-resizable.resizeStart', info);
                     scope.$apply();
                 };
-
 
                 scope.$watch('rDisabled', function(disabled) {
                     dir.forEach(function(direction) {
