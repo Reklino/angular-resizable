@@ -46,6 +46,7 @@ angular.module('angularResizable', [])
                 scope.$watch('rHeight', function(value) {
                     element[0].style[scope.rFlex ? flexBasis : 'height'] = scope.rHeight + 'px';
                 });
+                scope.$watch('rGrid');
 
                 element.addClass('resizable');
 
