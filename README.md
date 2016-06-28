@@ -25,7 +25,9 @@ rCenteredY | false | boolean | If set as true, the velocity of vertical resizing
 rWidth | false | integer or $scope variable | If set, the resizable element will be rendered with a predefined width relative to this value in pixels and a watcher will be set on the 'rWidth' attribute. [See this codepen](http://codepen.io/Reklino/pen/EjKXqg).
 rHeight | false | integer or $scope variable | If set, the resizable element will be rendered with a predefined height relative to this value in pixels and a watcher will be set on the 'rHeight' attribute. [See this codepen](http://codepen.io/Reklino/pen/EjKXqg).
 rGrabber | `<span></span>` | string | Defines custom inner html for the grabber.
+rDisabled | false | boolean or $scope variable | If set as true, the resizable element will not be resizable and the grabber will not be displayed.
 rNoThrottle | false | boolean | Disables `angular-resizable.resizing` throttling (see events section below).
+rParent | false | boolean | If set as true, the parent element will be resizable instead of the element itself.
 
 ## Events
 
