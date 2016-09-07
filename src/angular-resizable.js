@@ -14,6 +14,7 @@ angular.module('angularResizable', [])
         }
         return {
             restrict: 'AE',
+            priority: 599, // right after ng-if. Supports transclusion
             scope: {
                 rDirections: '=',
                 rCenteredX: '=',
