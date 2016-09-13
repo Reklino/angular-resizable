@@ -36,4 +36,9 @@
 ehthumbs.db
 Thumbs.db
 
+# IDE #
+#######
+.idea/
+*.iml
+
 node_modules
