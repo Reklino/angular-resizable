@@ -1,5 +1,5 @@
 angular.module('angularResizable', [])
-    .directive('resizable', function() {
+    .directive('resizable', function($parse) {
         var toCall;
         function throttle(fun) {
             if (toCall === undefined) {
@@ -14,31 +14,36 @@ angular.module('angularResizable', [])
         }
         return {
             restrict: 'AE',
-            scope: {
-                rDirections: '=',
-                rCenteredX: '=',
-                rCenteredY: '=',
-                rWidth: '=',
-                rHeight: '=',
-                rFlex: '=',
-                rGrabber: '@',
-                rDisabled: '@',
-                rNoThrottle: '=',
-                resizable: '@',
-            },
+            /*
+             Do not use isolated scope. Use attr instead. Attr should behave like the following isolated scope:
+                 rDirections: '=',
+                 rCenteredX: '=',
+                 rCenteredY: '=',
+                 rWidth: '=',
+                 rHeight: '=',
+                 rFlex: '=',
+                 rGrabber: '@',
+                 rDisabled: '@',
+                 rNoThrottle: '=',
+                 resizable: '@',
+             */
+            scope: false,
             link: function(scope, element, attr) {
-                if (scope.resizable === 'false') return;
+                if (attr.resizable === 'false') return;
 
                 var flexBasis = 'flexBasis' in document.documentElement.style ? 'flexBasis' :
                     'webkitFlexBasis' in document.documentElement.style ? 'webkitFlexBasis' :
                     'msFlexPreferredSize' in document.documentElement.style ? 'msFlexPreferredSize' : 'flexBasis';
 
+                var rFlex = $parse(attr.rFlex)();
+                var rNoThrottle = $parse(attr.rNoThrottle);
+                
                 // register watchers on width and height attributes if they are set
-                scope.$watch('rWidth', function(value){
-                    element[0].style[scope.rFlex ? flexBasis : 'width'] = scope.rWidth + 'px';
+                scope.$watch(attr.rWidth, function(value){
+                    element[0].style[rFlex ? flexBasis : 'width'] = value + 'px';
                 });
                 scope.$watch('rHeight', function(value){
-                    element[0].style[scope.rFlex ? flexBasis : 'height'] = scope.rHeight + 'px';
+                    element[0].style[rFlex ? flexBasis : 'height'] = value + 'px';
                 });
 
                 element.addClass('resizable');
@@ -46,10 +51,10 @@ angular.module('angularResizable', [])
                 var style = window.getComputedStyle(element[0], null),
                     w,
                     h,
-                    dir = scope.rDirections || ['right'],
-                    vx = scope.rCenteredX ? 2 : 1, // if centered double velocity
-                    vy = scope.rCenteredY ? 2 : 1, // if centered double velocity
-                    inner = scope.rGrabber ? scope.rGrabber : '<span></span>',
+                    dir = $parse(attr.rDirections)() || ['right'],
+                    vx = $parse(attr.rCenteredX)() ? 2 : 1, // if centered double velocity
+                    vy = $parse(attr.rCenteredY)() ? 2 : 1, // if centered double velocity
+                    inner = attr.rGrabber ? attr.rGrabber : '<span></span>',
                     start,
                     dragDir,
                     axis,
@@ -58,9 +63,9 @@ angular.module('angularResizable', [])
                 var updateInfo = function(e) {
                     info.width = false; info.height = false;
                     if(axis === 'x')
-                        info.width = parseInt(element[0].style[scope.rFlex ? flexBasis : 'width']);
+                        info.width = parseInt(element[0].style[rFlex ? flexBasis : 'width']);
                     else
-                        info.height = parseInt(element[0].style[scope.rFlex ? flexBasis : 'height']);
+                        info.height = parseInt(element[0].style[rFlex ? flexBasis : 'height']);
                     info.id = element[0].id;
                     info.evt = e;
                 };
@@ -77,19 +82,19 @@ angular.module('angularResizable', [])
                     var prop, offset = axis === 'x' ? start - getClientX(e) : start - getClientY(e);
                     switch(dragDir) {
                         case 'top':
-                            prop = scope.rFlex ? flexBasis : 'height';
+                            prop = rFlex ? flexBasis : 'height';
                             element[0].style[prop] = h + (offset * vy) + 'px';
                             break;
                         case 'bottom':
-                            prop = scope.rFlex ? flexBasis : 'height';
+                            prop = rFlex ? flexBasis : 'height';
                             element[0].style[prop] = h - (offset * vy) + 'px';
                             break;
                         case 'right':
-                            prop = scope.rFlex ? flexBasis : 'width';
+                            prop = rFlex ? flexBasis : 'width';
                             element[0].style[prop] = w - (offset * vx) + 'px';
                             break;
                         case 'left':
-                            prop = scope.rFlex ? flexBasis : 'width';
+                            prop = rFlex ? flexBasis : 'width';
                             element[0].style[prop] = w + (offset * vx) + 'px';
                             break;
                     }
@@ -97,7 +102,7 @@ angular.module('angularResizable', [])
                     function resizingEmit(){
                         scope.$emit('angular-resizable.resizing', info);
                     }
-                    if (scope.rNoThrottle) {
+                    if (rNoThrottle()) {
                         resizingEmit();
                     } else {
                         throttle(resizingEmit);
@@ -149,7 +154,7 @@ angular.module('angularResizable', [])
                     grabber.ondragstart = function() { return false; };
 
                     var down = function(e) {
-                        var disabled = (scope.rDisabled === 'true');
+                        var disabled = (attr.rDisabled === 'true');
                         if (!disabled && (e.which === 1 || e.touches)) {
                             // left mouse click or touch screen
                             dragStart(e, direction);
