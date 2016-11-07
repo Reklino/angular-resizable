@@ -1,6 +1,7 @@
 .resizable {
   position: relative;
 }
+
 .resizable.no-transition {
   transition: none !important;
 }
@@ -18,6 +19,7 @@
   user-select: none;
   background: transparent;
 }
+
 .rg-right span, .rg-left span, .rg-top span, .rg-bottom span {
   position: absolute;
   box-sizing: border-box;
