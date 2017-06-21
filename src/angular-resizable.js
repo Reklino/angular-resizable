@@ -23,9 +23,12 @@ angular.module('angularResizable', [])
                 rFlex: '=',
                 rGrabber: '@',
                 rDisabled: '@',
-                rNoThrottle: '='
+                rNoThrottle: '=',
+                resizable: '@',
             },
             link: function(scope, element, attr) {
+                if (scope.resizable === 'false') return;
+
                 var flexBasis = 'flexBasis' in document.documentElement.style ? 'flexBasis' :
                     'webkitFlexBasis' in document.documentElement.style ? 'webkitFlexBasis' :
                     'msFlexPreferredSize' in document.documentElement.style ? 'msFlexPreferredSize' : 'flexBasis';
