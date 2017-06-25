@@ -1,5 +1,5 @@
 angular.module('angularResizable', [])
-    .directive('resizable', function($parse) {
+    .directive('resizable', ['$parse', function($parse) {
         var toCall;
         function throttle(fun) {
             if (toCall === undefined) {
@@ -165,4 +165,4 @@ angular.module('angularResizable', [])
                 });
             }
         };
-    });
+    }]);
