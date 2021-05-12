@@ -35,10 +35,10 @@ angular.module('angularResizable', [])
 
                 // register watchers on width and height attributes if they are set
                 scope.$watch('rWidth', function(value){
-                    element[0].style[scope.rFlex ? flexBasis : 'width'] = scope.rWidth + 'px';
+                    element[0].style[scope.rFlex ? flexBasis : 'width'] = (value !== false ? value + 'px' : '');
                 });
                 scope.$watch('rHeight', function(value){
-                    element[0].style[scope.rFlex ? flexBasis : 'height'] = scope.rHeight + 'px';
+                    element[0].style[scope.rFlex ? flexBasis : 'height'] = (value !== false ? value + 'px' : '');
                 });
 
                 element.addClass('resizable');
