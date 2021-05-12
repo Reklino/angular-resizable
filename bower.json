@@ -6,7 +6,10 @@
     "Reklino <yakub89@gmail.com>"
   ],
   "description": "A lightweight directive for creating resizable containers in angularjs",
-  "main": "src/angular-resizable.js",
+  "main": [
+    "src/angular-resizable.js",
+    "src/angular-resizable.css"
+  ],
   "license": "MIT",
   "ignore": [
     "**/.*",
